@@ -41,7 +41,7 @@ def planner_node(state: AttackState):
     
     input_prompt = (
         f'Iteration: {iteration}\n'
-        f'Target Type: {state['target_type']}\n'
+        f'Target Type: {state[target_type]}\n'
         f'Last target Response: {last_response}\n'
         f'Past Logs: {history}\n'
         'Based on the information, what is your analysis and what is the next specific strategy for the Attacker agent to use?'
