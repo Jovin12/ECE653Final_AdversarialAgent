@@ -32,6 +32,7 @@ evaluator_agent = ChatOllama(model = 'qwen3.5:2b')
 # print("_________________________________________________")
 # print("_________________________________________________")
 
+# run ollama pull qwen3.5:0.8b
 target_agent = ChatOllama(model = 'qwen3.5:0.8b')
 # response = target_agent.invoke(messages)
 # print(response.content)
