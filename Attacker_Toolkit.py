@@ -1,38 +1,60 @@
 from langchain.tools import tool
 import random
+import numpy as np
 
 from art.attacks.evasion import FastGradientMethod, ProjectedGradientDescent, DeepFool, CarliniL2Method, AdversarialPatch
 
 from art.attacks.evasion import CarliniWagnerASR, ImperceptibleASR, ImperceptibleASRPyTorch, BoundaryAttack
 
 from art.attacks.evasion import ZooAttack, DecisionTreeAttack
-@tool
-def vision_attack_toolkit(attack_type: str, epsilon: float, target_model: str, ):
-    """
-    This is the Vision attack toolkit, which will execute a specific vision attack using the ART library. 
-    - attack_type: Choose from ['fgsm', 'pgd', 'deepfool', 'calinil2', 'adversarial_patch']
-    - epsilon: Perturbation strength (eg. 0.1)
-    - target_model: The model to be tested on (eg. 'resnet50', 'vgg16' etc.)
-    """
 
-    x_test = 0.0 # get loaded data based on the model
+
+# --------------
+# Vision Attacks
+# --------------
+@tool
+def vision_attack_toolkit(attack_type: str, epsilon: float, art_classifier, x_test: np.ndarray):
+    """
+    Executes a vision adversarial attack using the ART library.
+ 
+    Args:
+        attack_type   : One of ['fgsm', 'pgd', 'deepfool', 'carlini_l2', 'adversarial_patch']
+        epsilon       : Perturbation strength (e.g. 0.03). Used as confidence for carlini_l2.
+        art_classifier: A PyTorchClassifier instance (from vision_target.py). NOT a string.
+        x_test        : Clean input images as np.ndarray of shape (N, 3, 224, 224), float32 [0,1].
+ 
+    Returns:
+        dict with keys: status, adversarial_examples, original_examples, metrics
+    """
+    attack_type = attack_type.lower()
 
     if attack_type == 'fgsm':
-        attack = FastGradientMethod(estimator = target_model, eps = epsilon)
+        attack = FastGradientMethod(estimator = art_classifier, eps = epsilon)
     elif attack_type == 'pgd': 
-        attack = ProjectedGradientDescent(estimator = target_model, eps = epsilon)
+        attack = ProjectedGradientDescent(estimator = art_classifier, eps = epsilon, eps_step = epsilon/4, max_iter=40)
     elif attack_type == 'deepfool':
-        attack = DeepFool(estimator = target_model)
+        attack = DeepFool(classifier = art_classifier, max_iter=10)
     elif attack_type == 'calinil2':
-        attack = CarliniL2Method(estimator = target_model, confidence = epsilon)
+        attack = CarliniL2Method(estimator = art_classifier, confidence = epsilon, max_iter=100)
     elif attack_type == 'adversarial_patch':
-        attack = AdversarialPatch(estimator = target_model, patch_shape=(3,224,224), eps = epsilon)
+        attack = AdversarialPatch(classifier = art_classifier, patch_shape=(3,64,64), 
+                                  rotation_max=22.5, scale_min=0.1, scale_max=1.0, max_iter=500, batch_size=100)
     else: 
-        return "Unsupported attack type. Choose from ['fgsm', 'pgd', 'deepfool', 'calinil2', 'adversarial_patch']"
+        return {
+            "status": "error",
+            "message": f"Unsupported attack: '{attack_type}'. "
+                       f"Choose from ['fgsm', 'pgd', 'deepfool', 'carlini_l2', 'adversarial_patch']"
+        }
     
     x_adv = attack.generate(x = x_test)
 
-    return {'status': 'success', 'adversarial_example': x_adv, 'metrics':{'epsilon': epsilon, 'attack_type': attack_type}}
+    return {
+        'status': 'success', 
+        'adversarial_example': x_adv, 
+        'metrics':{'epsilon': epsilon, 
+        'attack_type': attack_type}, 
+        'num_samples': len(x_test)
+            }
 
 
 @tool
