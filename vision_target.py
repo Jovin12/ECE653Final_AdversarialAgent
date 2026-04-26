@@ -51,7 +51,7 @@ print(f"[VisionTarget] Device: {TORCH_DEVICE}  (ART sees: '{ART_DEVICE}')")
 # ---------------------------------------------------------
 NUM_CLASSES   = 1000
 INPUT_SHAPE   = (3, 224, 224)
-BATCH_SIZE    = 32
+BATCH_SIZE    = 100
 IMAGENET_PATH = "../data"       
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]

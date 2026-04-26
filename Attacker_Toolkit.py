@@ -38,7 +38,7 @@ def vision_attack_toolkit(attack_type: str, epsilon: float, art_classifier, x_te
         attack = CarliniL2Method(estimator = art_classifier, confidence = epsilon, max_iter=100)
     elif attack_type == 'adversarial_patch':
         attack = AdversarialPatch(classifier = art_classifier, patch_shape=(3,64,64), 
-                                  rotation_max=22.5, scale_min=0.1, scale_max=1.0, max_iter=500, batch_size=100)
+                                  rotation_max=22.5, scale_min=0.1, scale_max=1.0, max_iter=500, batch_size=100, targeted=False)
     else: 
         return {
             "status": "error",

@@ -14,14 +14,14 @@ from vision_target import load_vision_target
 
 from Attacker_Toolkit import vision_attack_toolkit
 
-model_name = 'wide_resnet'
+model_name = 'vit'
 art_classifier, x_test, y_test = load_vision_target(model_name)
 
 clean_preds = np.argmax(art_classifier.predict(x_test), axis=1)
 print(f"[Setup] Clean accuracy baseline: {np.mean(clean_preds == y_test)*100:.1f}%")
 
 
-VISION_ATTACKS = ['fgsm', 'pgd', 'deepfool', 'carlini_f12', 'adversarial_patch']
+VISION_ATTACKS = ['fgsm', 'pgd', 'carlini_f12', 'adversarial_patch']
 EPSILON_DEFAULT = 0.03
 
 class AttackState(TypedDict):
@@ -60,7 +60,7 @@ def planner_node(state: AttackState):
         f"Available attack types: {VISION_ATTACKS}\n"
         "Each attack also takes an epsilon (perturbation strength, float between 0.01 and 0.5).\n"
         "- fgsm/pgd: fast gradient attacks, epsilon controls pixel shift magnitude\n"
-        "- deepfool: finds minimal perturbation to cross decision boundary (epsilon ignored)\n"
+        # "- deepfool: finds minimal perturbation to cross decision boundary (epsilon ignored)\n"
         "- carlini_l2: strong optimization-based attack, epsilon = confidence margin\n"
         "- adversarial_patch: generates a visible patch that causes misclassification\n\n"
         "Output your reasoning, then end with exactly:\n"
@@ -210,7 +210,7 @@ def target_node(state: AttackState):
 def evaluator_node(state: AttackState):
     iteration   = state.get('iteration_count', 0)
     target_type = state['target_type']
- 
+    threshold = 0.98
     if target_type == 'vision':
         adv_preds = state.get('adv_preds', [])
         n         = len(adv_preds)
@@ -223,7 +223,6 @@ def evaluator_node(state: AttackState):
             adv_arr          = np.array(adv_preds)
             misclassified    = int(np.sum(adv_arr != clean_preds[:n]))
             misclassify_rate = misclassified / n
-            threshold = 0.98
             # >50% misclassification = successful attack
             is_successful    = misclassify_rate > threshold
  
