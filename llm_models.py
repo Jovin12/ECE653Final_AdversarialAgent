@@ -8,7 +8,7 @@ print("_________________________________________________")
 print("_________________________________________________")
 # 8b model
 # run ollama pull llama3.1 before executing this 
-attacker_agent = ChatOllama(model = 'llama3.1')
+planner_agent = ChatOllama(model = 'llama3.1')
 # response = attacker_agent.invoke(messages)
 # print(response.content)
 
@@ -16,7 +16,7 @@ attacker_agent = ChatOllama(model = 'llama3.1')
 # print("_________________________________________________")
 # 1.5b model
 # run ollama pull deepseek-r1:1.5b before executing this
-planner_agent = ChatOllama(model = 'deepseek-r1:1.5b')
+# planner_agent = ChatOllama(model = 'deepseek-r1:1.5b')
 
 # response = planner_agent.invoke(messages)
 # print(response.content)
@@ -32,6 +32,7 @@ evaluator_agent = ChatOllama(model = 'qwen3.5:2b')
 # print("_________________________________________________")
 # print("_________________________________________________")
 
+# run ollama pull qwen3.5:0.8b
 target_agent = ChatOllama(model = 'qwen3.5:0.8b')
 # response = target_agent.invoke(messages)
 # print(response.content)
