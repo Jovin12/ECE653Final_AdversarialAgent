@@ -1,6 +1,7 @@
 from typing import TypedDict, List, Optional, Dict, Any
 from langgraph.graph import StateGraph, START, END
 from langchain_core.messages import HumanMessage, SystemMessage
+from llm_models import evaluator_agent
 
 import numpy as np
 
@@ -12,11 +13,11 @@ from tabular_target import load_tabular_target
 from vision_target import load_vision_target
 
 # ===== CONFIGURATION - Change this to switch targets =====
-TARGET_TYPE = "audio"  # Options: "vision", "structured", "llm", "audio"
+TARGET_TYPE = "llm"  # Options: "vision", "structured", "llm", "audio"
 
 # Structured data specific settings
 STRUCTURED_DATASET = "iris"  # Options: "iris", "breast_cancer", "diabetes"
-STRUCTURED_MODEL = "logistic"  # Options: "mlp", "random_forest", "gradient_boost", "logistic"
+STRUCTURED_MODEL = "mlp"  # Options: "mlp", "random_forest", "gradient_boost", "logistic"
 
 # Vision specific settings
 VISION_MODEL = "wide_resnet" # Options: "resnet18", "wide_resnet", "vgg16"
