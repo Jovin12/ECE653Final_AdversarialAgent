@@ -25,7 +25,7 @@
 
 # Requirements
 
--   Python 3.10+
+-   Python 3.11.14
 
 -   PyTorch 2.0+
 
@@ -46,7 +46,7 @@ Pull required LLMs:
     ollama pull qwen3.5:0.8b  # Target LLM
 
 # Usage
-
+![alt text](image.png)
 ## Configure Target Type
 
 In `test.py`:
