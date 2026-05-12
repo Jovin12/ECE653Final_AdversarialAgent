@@ -122,13 +122,6 @@ Example output:
     1     deepfool    0.1      100%       0.0539 18.2dB
     5     pgd         0.1      100%       0.1388 16.3dB
 
-# Citation
-
-If you use this framework in your research, please cite:
-
-    J. Antony and M. Maria, "Using Agentic AI (LLMs) to Generate Adversarial Attacks 
-    on Other ML Models," ECE 653 Final Report, George Mason University, 2025.
-
 # Acknowledgments
 
 -   [Adversarial Robustness Toolkit
@@ -137,7 +130,3 @@ If you use this framework in your research, please cite:
 -   [LangGraph](https://www.langchain.com/langgraph)
 
 -   [Ollama](https://ollama.ai)
-
-# License
-
-This project is for academic research purposes only.
